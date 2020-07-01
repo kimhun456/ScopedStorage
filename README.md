@@ -62,7 +62,7 @@ Android 10 이상 버전에서 사용할 수 있는 새로운 모드입니다. �
 
 ### 파일 접근 권한 정리
 
-![파일접근권한정리](C:\Users\hyunjaee.kim\AppData\Roaming\Typora\typora-user-images\image-20200701160011780.png)
+![파일접근권한정리](table1.png)
 
 개별 앱 공간과 Download의 경우에는 권한이 필요가 없고 MediaStore같은 경우에도 권한이 필요한 경우는 다른 앱 파일에 접근할 때만 필요하다고 볼 수 있다.
 
