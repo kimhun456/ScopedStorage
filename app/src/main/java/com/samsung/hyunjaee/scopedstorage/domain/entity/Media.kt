@@ -1,0 +1,10 @@
+package com.samsung.hyunjaee.scopedstorage.domain.entity
+
+import android.net.Uri
+
+
+data class Media(
+    val uri: Uri,
+    val name: String,
+    val size: Int
+)
