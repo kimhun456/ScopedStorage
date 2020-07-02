@@ -51,7 +51,7 @@ class MediaStoreViewModel(application: Application) : AndroidViewModel(applicati
             while (cursor.moveToNext()) {
                 // Get values of columns for a given video.
                 val name = cursor.getString(nameColumn)
-                val size = cursor.getInt(sizeColumn)
+                val size = cursor.getLong(sizeColumn)
                 audioList += Media(Uri.EMPTY, name, size)
             }
         }
@@ -87,7 +87,7 @@ class MediaStoreViewModel(application: Application) : AndroidViewModel(applicati
                 // Get values of columns for a given video.
                 val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
-                val size = cursor.getInt(sizeColumn)
+                val size = cursor.getLong(sizeColumn)
 
                 val contentUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id
@@ -124,7 +124,7 @@ class MediaStoreViewModel(application: Application) : AndroidViewModel(applicati
                 // Get values of columns for a given video.
                 val id = cursor.getLong(idColumn)
                 val name = cursor.getString(nameColumn)
-                val size = cursor.getInt(sizeColumn)
+                val size = cursor.getLong(sizeColumn)
 
                 val contentUri: Uri = ContentUris.withAppendedId(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id
@@ -133,5 +133,42 @@ class MediaStoreViewModel(application: Application) : AndroidViewModel(applicati
             }
         }
         setMediaList(imageList)
+    }
+
+    fun loadDownloads() {
+        Timber.i("loadDownloads()")
+        val downloadList = mutableListOf<Media>()
+        val projection = arrayOf(
+            MediaStore.Downloads._ID,
+            MediaStore.Downloads.DISPLAY_NAME,
+            MediaStore.Downloads.SIZE
+        )
+
+        val query = contentResolver.query(
+            MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )
+        query?.use { cursor ->
+            // Cache column indices.
+            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Downloads._ID)
+            val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Downloads.DISPLAY_NAME)
+            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Downloads.SIZE)
+
+            while (cursor.moveToNext()) {
+                // Get values of columns for a given video.
+                val id = cursor.getLong(idColumn)
+                val name = cursor.getString(nameColumn)
+                val size = cursor.getLong(sizeColumn)
+
+                val contentUri: Uri = ContentUris.withAppendedId(
+                    MediaStore.Downloads.EXTERNAL_CONTENT_URI, id
+                )
+                downloadList += Media(contentUri, name, size)
+            }
+        }
+        setMediaList(downloadList)
     }
 }

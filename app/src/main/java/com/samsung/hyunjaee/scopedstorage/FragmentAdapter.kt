@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.samsung.hyunjaee.scopedstorage.mediastore.MediaStoreFragment
-import com.samsung.hyunjaee.scopedstorage.saf.SafFragment
+import com.samsung.hyunjaee.scopedstorage.saf.SystemPickerFragment
 
 class FragmentAdapter(
     private val context: Context,
@@ -24,7 +24,7 @@ class FragmentAdapter(
         return if (position == 0) {
             MediaStoreFragment.newInstance()
         } else {
-            SafFragment.newInstance()
+            SystemPickerFragment.newInstance()
         }
     }
 

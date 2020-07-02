@@ -56,7 +56,7 @@ Android 10 이상 버전에서 사용할 수 있는 새로운 모드입니다. �
 
 ### 공용저장 공간의 변경
 
- 파일을 저장할때 만약 앱이 지워져도 파일이 존재해야 한다면 (ex: 사진, 동영상) MediaStore를 통하여 파일을 저장해야 합니다. 또한 기존에 존재하던 사진, 동영상 그리고 음악에 이어서 Download컬렉션이 추가되었습니다. Download에 저장된 파일들은 자신이 생성한 파일을 제외하고는 시스템 파일 탐색기를 이용해서 사용자가 명시적으로 선택한 경우에만 접근이 가능합니다.
+ 파일을 저장할때 만약 앱이 지워져도 파일이 존재해야 한다면 (ex: 사진, 동영상) MediaStore를 통하여 파일을 저장해야 합니다. 또한 기존에 존재하던 사진, 동영상 그리고 음악에 이어서 Download컬렉션이 추가되었습니다. 
 
 
 
@@ -64,7 +64,43 @@ Android 10 이상 버전에서 사용할 수 있는 새로운 모드입니다. �
 
 ![파일접근권한정리](table1.png)
 
-개별 앱 공간과 Download의 경우에는 권한이 필요가 없고 MediaStore같은 경우에도 권한이 필요한 경우는 다른 앱 파일에 접근할 때만 필요하다고 볼 수 있다.
+개별 앱 공간과 Download의 경우에는 권한이 필요가 없고 MediaStore같은 경우에도 권한이 필요한 경우는 다른 앱 파일에 접근할 때만 필요하다고 볼 수 있다.  MediaStore에서 Audio, Video, Image의 경우 ```READ_EXTERNAL_STORAGE```가 없다면 자기가 추가한 파일들만 볼 수 있다. 그리고 만약 쓰기 권한을 요청한다고 하여도 오직 ```READ_EXTERNAL_STORAGE```만 적용되게 된다.
+
+
+
+### Downalod 컬렉션
+
+Download에 저장된 파일들은 **자신이 생성한 파일을 제외**하고는 시스템 파일 탐색기를 이용해서 사용자가 명시적으로 선택한 경우에만 접근이 가능합니다. 다운로드 컬렉션의 경우 Non-media file을 위해 새롭게 디자인된 곳이다. 이 곳에서는 non-media file 쓰기/읽기가 가능하다. 하지만 다른 Collection들과는 다르게 ```READ_STORAGE_PERMISSION```이 있다고 해서 다른 앱이 올린 files들을 볼 수 가 없다.
+
+> 이를 위해 Android 10에서는 SAF(Systeam Access Framework)가 재단장 되었다.
+
+
+
+### Media Location 권한 강화
+
+ ```READ_EXTERNAL_STORAGE```를 통해 Image나 Video를 갖고 올 수 있다고 해서 그 파일에 저장된 위치 metadata를 가지고 올 수 있는 것이 아니다. 이제 ```ACCESS_MEDIA_LOCATION```권한을 유저에게 동의를 받아야지만 위치  metadata가 포함된 파일을 받을 수 있다.
+
+
+
+### 미디어 수정 및 삭제
+
+ 자기 자신이 만든 media의 경우 수정 및 삭제가 자유롭게 일어나게 되지만 다른앱이 만든 미디어의 경우에는 수정 및 삭제를 하기 위해서는 유저에게 특정 UI를 통하여 동의를 받아야 합니다.  여러 미디어를 bulk 수정 및 삭제가 가능한 UI 또한 추가되었습니다.
+
+
+
+### Storage Access Framework
+
+ Non-media 파일의 경우 System Picker를 사용해서 권한을 얻어야한다. 또한 이제부터는 공유 엑세스 포인트(구 external storage) 그리고 다른 앱 폴더 등등 민감한 디렉토리에 대한 권한을 얻을 수 없도록 수정됩니다. 또한 
+
+```ACTION_OPEN_DOCUMENT```를 사용하여 단일 파일을 open할 떄 쓸 수 있고 ```ACTION_OPEN_DOCUMENT_TREE```를 사용하여 단일 폴더를 선택할 때 쓸 수 있습니다.
+
+하지만 이 때도 디바이스가 rebooting되게 되면 퍼미션을 잃게 되기 때문에 
+
+```kotlin
+takePernsistableUriPermission(uri)
+```
+
+를 사용하여서 엑세스를 계속 유지하도록 할 수 있습니다. 하지만 이 역시 수정 or 삭제 된다면 permission이 회수되므로 언제나 Permission을 확인해야 합니다.
 
 
 

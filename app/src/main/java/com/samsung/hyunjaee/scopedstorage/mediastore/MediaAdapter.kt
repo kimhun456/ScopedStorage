@@ -12,7 +12,7 @@ import com.samsung.hyunjaee.scopedstorage.domain.entity.Media
 class MediaAdapter(private val context: Context?) :
     RecyclerView.Adapter<MediaAdapter.MediaHolder>() {
 
-    private val mediaList: MutableList<Media> = ArrayList()
+    private val mediaList = mutableListOf<Media>()
 
     fun submitList(newList: List<Media>) {
         mediaList.clear()

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.samsung.hyunjaee.scopedstorage.R
 import com.samsung.hyunjaee.scopedstorage.databinding.FragmentMediaStoreBinding
 import timber.log.Timber
@@ -48,10 +49,19 @@ class MediaStoreFragment : Fragment() {
         binding.recyclerView.layoutManager = GridLayoutManager(context, 3)
         viewModel.mediaList().observe(viewLifecycleOwner, Observer { mediaList ->
             adapter.submitList(mediaList)
+            activity?.window?.decorView?.let {
+                Snackbar.make(
+                    it,
+                    "Load Complete size : ${mediaList.size}",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         })
+        viewModel.loadImages()
         binding.audioButton.setOnClickListener { viewModel.loadAudios() }
         binding.videoButton.setOnClickListener { viewModel.loadVideos() }
         binding.imageButton.setOnClickListener { viewModel.loadImages() }
+        binding.downloadButton.setOnClickListener { viewModel.loadDownloads() }
         return binding.root
     }
 }
